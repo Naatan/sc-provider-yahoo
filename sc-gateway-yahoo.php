@@ -132,23 +132,23 @@ class SC_Gateway_Yahoo
 		if (empty($_REQUEST[ 'social_connect_name' ]))
 		{
 			$name       = $username;
-			$first_name  = $username;
+			$first_name = $username;
 			$last_name  = '';
 		}
 			else
 		{
 			$name       = $_REQUEST[ 'social_connect_name' ];
 			$names      = explode(' ',$name);
-			$first_name  = array_shift($names);
+			$first_name = array_shift($names);
 			$last_name  = implode(' ',$names);
 		}
 		
 		return (object) array(
 			'provider_identity' => $provider_identity,
 			'email'             => $_REQUEST[ 'social_connect_email' ],
-			'first_name'         => $first_name,
+			'first_name'        => $first_name,
 			'last_name'         => $last_name,
-			'profile_url'        => '',
+			'profile_url'       => '',
 			'name'              => $name,
 			'user_login'        => strtolower($username)
 		);
