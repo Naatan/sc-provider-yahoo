@@ -59,17 +59,17 @@ class SC_Gateway_Yahoo
 	
 	static function connect()
 	{
-		$openid = new LightOpenID;
-		$openid->identity = 'me.yahoo.com';
-		$openid->required = array('namePerson', 'namePerson/friendly', 'contact/email');
-		$openid->returnUrl = SOCIAL_CONNECT_PLUGIN_URL . '/call.php?gateway=yahoo&call=callback';
+		$openid             = new LightOpenID;
+		$openid->identity   = 'me.yahoo.com';
+		$openid->required   = array('namePerson', 'namePerson/friendly', 'contact/email');
+		$openid->returnUrl  = SOCIAL_CONNECT_PLUGIN_URL . '/call.php?gateway=yahoo&call=callback';
 		header('Location: ' . $openid->authUrl());
 	}
 	
 	static function callback()
 	{
-		$openid 			= new LightOpenID;
-		$openid->returnUrl 	= SOCIAL_CONNECT_PLUGIN_URL . '/call.php?gateway=yahoo&call=callback';
+		$openid             = new LightOpenID;
+		$openid->returnUrl  = SOCIAL_CONNECT_PLUGIN_URL . '/call.php?gateway=yahoo&call=callback';
 		
 		try
 		{
@@ -85,12 +85,12 @@ class SC_Gateway_Yahoo
 			return;
 		}
 		
-		$yahoo_id 	= $openid->identity;
+		$yahoo_id   = $openid->identity;
 		$attributes = $openid->getAttributes();
-		$email 		= $attributes['contact/email'];
-		$name 		= $attributes['namePerson'];
-		$username 	= $attributes['namePerson/friendly'];
-		$signature 	= SC_Utils::generate_signature($yahoo_id);
+		$email      = $attributes['contact/email'];
+		$name       = $attributes['namePerson'];
+		$username   = $attributes['namePerson/friendly'];
+		$signature  = SC_Utils::generate_signature($yahoo_id);
 		
 		?>
 		<html>
@@ -116,41 +116,41 @@ class SC_Gateway_Yahoo
 	
 	static function process_login()
 	{
-		$redirect_to 			= SC_Utils::redirect_to();
-		$provider_identity 		= $_REQUEST[ 'social_connect_openid_identity' ];
-		$provided_signature 	= $_REQUEST[ 'social_connect_signature' ];
+		$redirect_to            = SC_Utils::redirect_to();
+		$provider_identity      = $_REQUEST[ 'social_connect_openid_identity' ];
+		$provided_signature     = $_REQUEST[ 'social_connect_signature' ];
 		
 		SC_Utils::verify_signature( $provider_identity, $provided_signature, $redirect_to );
 		
 		$username = $_REQUEST[ 'social_connect_username' ];
 		if (empty($username))
 		{
-			$username = explode('@',$_REQUEST[ 'social_connect_email' ]);
-			$username = $username[0];
+			$username   = explode('@',$_REQUEST[ 'social_connect_email' ]);
+			$username   = $username[0];
 		}
 		
 		if (empty($_REQUEST[ 'social_connect_name' ]))
 		{
-			$name 		= $username;
-			$first_name 	= $username;
-			$last_name 	= '';
+			$name       = $username;
+			$first_name  = $username;
+			$last_name  = '';
 		}
 			else
 		{
-			$name 		= $_REQUEST[ 'social_connect_name' ];
-			$names 		= explode(' ',$name);
-			$first_name 	= array_shift($names);
-			$last_name 	= implode(' ',$names);
+			$name       = $_REQUEST[ 'social_connect_name' ];
+			$names      = explode(' ',$name);
+			$first_name  = array_shift($names);
+			$last_name  = implode(' ',$names);
 		}
 		
 		return (object) array(
 			'provider_identity' => $provider_identity,
-			'email' 			=> $_REQUEST[ 'social_connect_email' ],
-			'first_name' 		=> $first_name,
-			'last_name' 		=> $last_name,
-			'profile_url'		=> '',
-			'name' 				=> $name,
-			'user_login' 		=> strtolower($username)
+			'email'             => $_REQUEST[ 'social_connect_email' ],
+			'first_name'         => $first_name,
+			'last_name'         => $last_name,
+			'profile_url'        => '',
+			'name'              => $name,
+			'user_login'        => strtolower($username)
 		);
 	}
 	
