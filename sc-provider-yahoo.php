@@ -12,16 +12,27 @@ License: GPL2
 
 require_once dirname(__FILE__) . '/openid.php';
 
+/**
+ * Social Connect Yahoo provider
+ */
 class SC_Provider_Yahoo
 {
 	
-	protected static $calls = array('connect','callback');
-	
+	/**
+	 * Init, static class constructor
+	 * 
+	 * @returns	void 
+	 */
 	static function init()
 	{
 		add_action('social_connect_button_list',array('SC_Provider_Yahoo','render_button'));
 	}
 	
+	/**
+	 * When a callback is made, it will be tunneled through this method
+	 * 
+	 * @returns	void							
+	 */
 	static function call()
 	{
 		if ( !isset($_GET['call']) OR !in_array($_GET['call'], array('connect','callback')))
@@ -32,6 +43,11 @@ class SC_Provider_Yahoo
 		call_user_func(array('SC_Provider_Yahoo', $_GET['call']));
 	}
 	
+	/**
+	 * Render connect button and related javascript
+	 * 
+	 * @returns	void							
+	 */
 	static function render_button()
 	{
 		$image_url = plugins_url() . '/' . basename( dirname( __FILE__ )) . '/button.png';
@@ -57,6 +73,11 @@ class SC_Provider_Yahoo
 		<?php
 	}
 	
+	/**
+	 * Initiate authentication, redirects to provider auth page
+	 * 
+	 * @returns	void							
+	 */
 	static function connect()
 	{
 		$openid             = new LightOpenID;
@@ -66,6 +87,11 @@ class SC_Provider_Yahoo
 		header('Location: ' . $openid->authUrl());
 	}
 	
+	/**
+	 * Provider authentication callback, called when the provider has done it's part
+	 * 
+	 * @returns	void							
+	 */
 	static function callback()
 	{
 		$openid             = new LightOpenID;
@@ -114,6 +140,11 @@ class SC_Provider_Yahoo
 		<?php
 	}
 	
+	/**
+	 * Process the login, validates the provider's data and returns required information
+	 * 
+	 * @returns	object							
+	 */
 	static function process_login()
 	{
 		$redirect_to            = SC_Utils::redirect_to();
