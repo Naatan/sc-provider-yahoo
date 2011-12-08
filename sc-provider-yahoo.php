@@ -1,7 +1,7 @@
 <?php
 
 /*
-Plugin Name: Social Connect - Yahoo Gateway
+Plugin Name: Social Connect - Yahoo Provider
 Plugin URI: http://wordpress.org/extend/plugins/social-connect/
 Description: Allows you to login / register with Yahoo - REQUIRES Social Connect plugin
 Version: 0.10
@@ -12,14 +12,14 @@ License: GPL2
 
 require_once dirname(__FILE__) . '/openid.php';
 
-class SC_Gateway_Yahoo
+class SC_Provider_Yahoo
 {
 	
 	protected static $calls = array('connect','callback');
 	
 	static function init()
 	{
-		add_action('social_connect_button_list',array('SC_Gateway_Yahoo','render_button'));
+		add_action('social_connect_button_list',array('SC_Provider_Yahoo','render_button'));
 	}
 	
 	static function call()
@@ -29,7 +29,7 @@ class SC_Gateway_Yahoo
 			return;
 		}
 		
-		call_user_func(array('SC_Gateway_Yahoo', $_GET['call']));
+		call_user_func(array('SC_Provider_Yahoo', $_GET['call']));
 	}
 	
 	static function render_button()
@@ -38,7 +38,7 @@ class SC_Gateway_Yahoo
 		?>
 		<a href="javascript:void(0);" title="Yahoo" class="social_connect_login_yahoo"><img alt="Yahoo" src="<?php echo $image_url ?>" /></a>
 		<div id="social_connect_yahoo_auth" style="display: none;">
-			<input type="hidden" name="redirect_uri" value="<?php echo( SOCIAL_CONNECT_PLUGIN_URL . '/call.php?call=connect&gateway=yahoo' ); ?>" />
+			<input type="hidden" name="redirect_uri" value="<?php echo( SOCIAL_CONNECT_PLUGIN_URL . '/call.php?call=connect&provider=yahoo' ); ?>" />
 		</div>
 		
 		<script type="text/javascript">
@@ -62,14 +62,14 @@ class SC_Gateway_Yahoo
 		$openid             = new LightOpenID;
 		$openid->identity   = 'me.yahoo.com';
 		$openid->required   = array('namePerson', 'namePerson/friendly', 'contact/email');
-		$openid->returnUrl  = SOCIAL_CONNECT_PLUGIN_URL . '/call.php?gateway=yahoo&call=callback';
+		$openid->returnUrl  = SOCIAL_CONNECT_PLUGIN_URL . '/call.php?provider=yahoo&call=callback';
 		header('Location: ' . $openid->authUrl());
 	}
 	
 	static function callback()
 	{
 		$openid             = new LightOpenID;
-		$openid->returnUrl  = SOCIAL_CONNECT_PLUGIN_URL . '/call.php?gateway=yahoo&call=callback';
+		$openid->returnUrl  = SOCIAL_CONNECT_PLUGIN_URL . '/call.php?provider=yahoo&call=callback';
 		
 		try
 		{
@@ -156,4 +156,4 @@ class SC_Gateway_Yahoo
 	
 }
 
-SC_Gateway_Yahoo::init();
+SC_Provider_Yahoo::init();
